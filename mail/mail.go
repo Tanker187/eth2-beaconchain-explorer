@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"net/smtp"
+	"strings"
 	"time"
 
 	"github.com/gobitfly/eth2-beaconchain-explorer/db"
@@ -183,6 +184,20 @@ func SendMailMailgun(to, subject, msgHtml, msgText string, attachment []types.Em
 	// return nil
 }
 
+// sanitizeEmailHeader removes CR and LF characters from header values to prevent header injection.
+func sanitizeEmailHeader(s string) string {
+	// Strip carriage returns and newlines which could be used to inject additional headers.
+	safe := strings.ReplaceAll(s, "\r", "")
+	safe = strings.ReplaceAll(safe, "\n", "")
+	return safe
+}
+
+// sanitizeEmailBody normalizes the body to avoid unintended control characters influencing SMTP parsing.
+func sanitizeEmailBody(s string) string {
+	// For plain-text emails, it's safe to remove carriage returns; keep '\n' for formatting.
+	return strings.ReplaceAll(s, "\r", "")
+}
+
 // SendMailSMTP sends an email to the given address with the given message, using smtp.
 func SendTextMailSMTP(to, subject, body string) error {
 	server := utils.Config.Frontend.Mail.SMTP.Server // eg. smtp.gmail.com:587
@@ -190,9 +205,14 @@ func SendTextMailSMTP(to, subject, body string) error {
 	from := utils.Config.Frontend.Mail.SMTP.User     // eg. userxyz123@gmail.com
 	password := utils.Config.Frontend.Mail.SMTP.Password
 	auth := smtp.PlainAuth("", from, password, host)
-	msg := []byte(fmt.Sprintf("To: %s\r\nSubject: %s\r\n\r\n%s\r\n", to, subject, body))
 
-	err := smtp.SendMail(server, auth, from, []string{to}, msg)
+	safeTo := sanitizeEmailHeader(to)
+	safeSubject := sanitizeEmailHeader(subject)
+	safeBody := sanitizeEmailBody(body)
+
+	msg := []byte(fmt.Sprintf("To: %s\r\nSubject: %s\r\n\r\n%s\r\n", safeTo, safeSubject, safeBody))
+
+	err := smtp.SendMail(server, auth, from, []string{safeTo}, msg)
 	if err != nil {
 		return fmt.Errorf("error sending mail via smtp: %w", err)
 	}
