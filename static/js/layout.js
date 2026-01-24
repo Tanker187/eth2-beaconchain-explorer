@@ -886,14 +886,14 @@ $("[data-truncate-middle]").each(function (item) {
 
 // function for trimming an placing ellipsis in the middle when text is overflowing
 function truncateMiddle(element) {
-  element.innerHTML = element.getAttribute("data-truncate-middle")
+  element.innerText = element.getAttribute("data-truncate-middle")
   const parent = element.parentElement
   // get ratio of visible width to full width
   const ratio = parent.offsetWidth / parent.scrollWidth
   if (ratio < 1) {
     const removeCount = Math.ceil((parent.innerText.length * (1 - ratio)) / 2) + 1
     const originalText = element.getAttribute("data-truncate-middle")
-    element.innerHTML = originalText.substr(0, originalText.length / 2 - removeCount) + "…" + originalText.substr(originalText.length / 2 + removeCount)
+    element.innerText = originalText.substr(0, originalText.length / 2 - removeCount) + "…" + originalText.substr(originalText.length / 2 + removeCount)
   }
 }
 
