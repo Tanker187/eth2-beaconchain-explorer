@@ -612,7 +612,13 @@ func (lc *LighthouseClient) GetBalancesForEpoch(epoch int64) (map[uint64]uint64,
 
 	validatorBalances := make(map[uint64]uint64)
 
-	resp, err := lc.get(fmt.Sprintf("%s/eth/v1/beacon/states/%d/validator_balances", lc.endpoint, epoch*int64(utils.Config.Chain.ClConfig.SlotsPerEpoch)))
+	slotsPerEpoch := utils.Config.Chain.ClConfig.SlotsPerEpoch
+	if slotsPerEpoch > math.MaxInt64 {
+		return nil, fmt.Errorf("SlotsPerEpoch value %d exceeds MaxInt64", slotsPerEpoch)
+	}
+	slotsPerEpochInt := int64(slotsPerEpoch)
+
+	resp, err := lc.get(fmt.Sprintf("%s/eth/v1/beacon/states/%d/validator_balances", lc.endpoint, epoch*slotsPerEpochInt))
 	if err != nil && epoch == 0 {
 		resp, err = lc.get(fmt.Sprintf("%s/eth/v1/beacon/states/genesis/validator_balances", lc.endpoint))
 		if err != nil {
