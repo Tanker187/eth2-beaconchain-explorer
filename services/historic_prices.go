@@ -3,6 +3,7 @@ package services
 import (
 	"encoding/json"
 	"fmt"
+	"math"
 	"net/http"
 	"time"
 
@@ -84,6 +85,10 @@ func updateHistoricPrices() error {
 	datesMap := make(map[string]bool)
 	for _, date := range dates {
 		datesMap[date.Format("01-02-2006")] = true
+	}
+
+	if utils.Config.Chain.GenesisTimestamp > math.MaxInt64 {
+		return fmt.Errorf("genesis timestamp %d exceeds max int64 value", utils.Config.Chain.GenesisTimestamp)
 	}
 
 	currentDay := time.Unix(int64(utils.Config.Chain.GenesisTimestamp), 0)
