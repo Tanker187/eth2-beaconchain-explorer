@@ -68,9 +68,14 @@ require (
 	github.com/wealdtech/go-eth2-util v1.8.1
 	github.com/zesik/proxyaddr v0.0.0-20161218060608-ec32c535184d
 	go.uber.org/atomic v1.11.0
+<<<<dependabot/go_modules/go_modules-dd7da38a6b
+	golang.org/x/crypto v0.45.0
+	golang.org/x/sync v0.18.0
+	golang.org/x/text v0.31.0
+=======
 	golang.org/x/crypto v0.36.0
 	golang.org/x/sync v0.12.0
-	golang.org/x/text v0.23.0
+	golang.org/x/text v0.23.0master
 	golang.org/x/time v0.9.0
 	google.golang.org/api v0.217.0
 	google.golang.org/grpc v1.69.4
@@ -251,9 +256,15 @@ require (
 	github.com/thomaso-mirodin/intmath v0.0.0-20160323211736-5dc6d854e46e // indirect
 	github.com/tklauser/go-sysconf v0.3.13 // indirect
 	github.com/tklauser/numcpus v0.7.0 // indirect
+<<dependabot/go_modules/go_modules-dd7da38a6b
+	golang.org/x/net v0.47.0
+	golang.org/x/oauth2 v0.25.0 // indirect
+	golang.org/x/sys v0.38.0 // indirect
+=======
 	golang.org/x/net v0.38.0
 	golang.org/x/oauth2 v0.25.0 // indirect
 	golang.org/x/sys v0.36.0 // indirect
+>>>master
 	golang.org/x/xerrors v0.0.0-20231012003039-104605ab7028 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
